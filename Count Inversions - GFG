@@ -1,0 +1,62 @@
+So, Approach is similar to merge sort
+So what is count inversion -> a[i]>a[j] and i<j
+
+What we can do is while merging we can count inversions. Let's take an example that is 
+first array-> 2,3,5
+second array-> 1,4
+
+So, suppose index1=0 and index2=0 then, if we compare then 1<2 so it will also be smaller than 3 and 5. 
+We can count this as inversion.
+
+One mistake i was doing here is that i was also counting the inversion when let's say index1 is still less than len1, But in this case i was wrong as there is no 
+element in second array so how can we compare.
+
+void merge(long long arr[],long long start,long long end,long long& count){
+        long long mid=(start+end)/2;
+        long long len1=mid-start+1;
+        long long len2=end-mid;
+        long long mainArray=start;
+        vector<long long> first,second;
+        for(long long i=0;i<len1;i++){
+            first.push_back(arr[mainArray++]);
+        }
+        mainArray=mid+1;
+        for(long long i=0;i<len2;i++){
+            second.push_back(arr[mainArray++]);
+        }
+        long long index1=0;
+        long long index2=0;
+        mainArray=start;
+        while(index1<len1 and index2<len2){
+            if(first[index1]<=second[index2]){
+                arr[mainArray++]=first[index1++];
+            }
+            else{
+                count+=(int(first.size())-index1);
+                arr[mainArray++]=second[index2++];
+            }
+        }
+        while(index1<len1){
+            // count+=(int(first.size())-index1);
+            arr[mainArray++]=first[index1++];
+        }
+        while(index2<len2){
+            arr[mainArray++]=second[index2++];
+        }
+    }
+    void mergeSort(long long arr[], long long start,long long end,long long& count){
+        if(start>=end){
+            return ;
+        }
+        long long mid=(start+end)/2;
+        mergeSort(arr,start,mid,count);
+        mergeSort(arr,mid+1,end,count);
+        merge(arr,start,end,count);
+    }
+    long long int inversionCount(long long arr[], long long N)
+    {
+        // Your Code Here
+        long long int count=0;
+        mergeSort(arr,0,N-1,count);
+        return count;
+    }
