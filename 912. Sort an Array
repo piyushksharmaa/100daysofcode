@@ -1,0 +1,56 @@
+class Solution {
+public:
+    void merge(vector<int>& nums,int start,int end){
+        int mid=(start+end)/2;
+        int len1=mid-start+1;
+        int len2=end-mid;
+        int mainArrayindex=start;
+        vector<int> first,second;              // Made two vectors to copy values from the main Array.
+        for(int i=0;i<len1;i++){
+            first.push_back(nums[mainArrayindex++]);
+        }
+        mainArrayindex=mid+1;
+        for(int i=0;i<len2;i++){
+            second.push_back(nums[mainArrayindex++]);
+        }
+        // Now performing the logic for merge two sorted arrays.(You must be confused that how it is sorted so as
+        // you can see that we are recursively breaking them till we get single element and then merging them up to
+        // get sorted array as a whole.) Recursion is doing whole process for us we don't have to worry about that.
+        int index1=0;
+        int index2=0;
+        mainArrayindex=start;
+        while(index1<len1 and index2<len2){
+            if(first[index1]<second[index2]){
+                nums[mainArrayindex++]=first[index1++];
+            }
+            else{
+                nums[mainArrayindex++]=second[index2++];
+            }
+        }
+        while(index1<len1){
+            nums[mainArrayindex++]=first[index1++];
+        }
+        while(index2<len2){
+            nums[mainArrayindex++]=second[index2++];
+        }
+    }
+    void mergeSort(vector<int>& nums,int start,int end){
+        if(start>=end){                   // So '=' is there because a single element is sorted in itself.
+            return ;
+        }
+        // Here, we are dividing it into two parts and then sorting them differently and then merging them together 
+        // to get a whole sorted array.
+        int mid=(start+end)/2;      
+        mergeSort(nums,start,mid);        // Sorting left part
+        mergeSort(nums,mid+1,end);        // Sorting right part
+        merge(nums,start,end);            // Now merging both the parts together to get a combine sorted array.
+    }
+    vector<int> sortArray(vector<int>& nums) {
+        int n=nums.size();
+        int start=0;
+        int end=n-1;
+        // Calling mergeSort function which will give us our sorted array.
+        mergeSort(nums,start,end);
+        return nums;
+    }
+};
