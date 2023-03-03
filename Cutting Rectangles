@@ -1,0 +1,18 @@
+class Solution{
+public:
+    vector<long long int> minimumSquares(long long int L, long long int B)
+    {
+        // code here
+        long long int side=__gcd(L,B);
+        long long int area=L*B;
+        long long int found=area/(side*side);
+        vector<long long int> res;
+        res.push_back(found);
+        res.push_back(side);
+        return res;
+    }
+};
+
+
+Binary search approach will not work here as predicate function will not be montonic.
+side will be gcd of L and B because first of all L and B must be divisible by side such that no residue will left and for max side we will take the maximum factor.
