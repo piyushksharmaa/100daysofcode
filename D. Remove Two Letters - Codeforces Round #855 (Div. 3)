@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+#define mod 1000000007
+signed main(){
+	ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+	int t,n;
+	cin>>t;
+	while(t--){
+		cin>>n;
+		string s;
+		cin>>s;
+		int ans=0;
+		for(int i=1;i<n;i++){                  // We are starting from 1 as we have to pick two characters at a time so hum 1st string to utha hi sktee hai
+			if(i==1){                            
+				ans++;
+			}
+			else if(i>1){                        // if(i>1) ---> and Eg. s="abaccd" -> if we remove ab then also string form will be accd and ba then also same....That's the main catch here otherwise all the strings formed will be counted as distinct. 
+				if(s[i-2]==s[i]){
+					continue;
+				}
+				else{
+					ans++;
+				}
+			}
+		}
+		cout<<ans<<endl;
+	}
+}
