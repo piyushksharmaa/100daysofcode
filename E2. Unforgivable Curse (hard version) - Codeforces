@@ -1,0 +1,65 @@
+Approach : This was a great question in which we have to convert s from t but the condition was that we can only letters at distance k/k+1 only.
+           So, humne kyaa kiyaa ki isme graph ka concept use kiyaa kyuki within a connected component we can make any permuation of those characters who are there
+           So, hum dfs lgaakr ek connected component me jo bhi hai unhe nikaalenge firr compare krrenge sort krke.... if they are equal then we are fine but if not
+           then we will print NO.
+           One important thing i forgot to tell you is hum graph unhi ka bnaayenge that are k/k+1 distance away. kyuki hum unhi ko swap krr sktee
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+#define mod 1000000007
+void dfs(int node,vector<int> adj[],vector<int>& vis,vector<int>& store){
+	vis[node]=1;
+	store.push_back(node);
+	for(auto it: adj[node]){
+		if(vis[it]==0){
+			dfs(it,adj,vis,store);
+		}
+	}
+}
+
+signed main(){
+	ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+	int tc,n,k;
+	cin>>tc;
+	while(tc--){
+		cin>>n>>k;
+		string s,t;
+		cin>>s>>t;
+		vector<int> adj[n];
+		for(int i=0;i<n;i++){
+			if(i+k<n){
+				adj[i].push_back(i+k);
+				adj[i+k].push_back(i);
+			}
+			if(i+k+1<n){
+				adj[i].push_back(i+k+1);
+				adj[i+k+1].push_back(i);
+			}
+		}
+		vector<int> vis(n,0);
+		bool check=true;
+		for(int i=0;i<n;i++){
+			if(vis[i]==0){
+				vector<int> store;
+				dfs(i,adj,vis,store);
+				string s1,s2;
+				for(int j=0;j<store.size();j++){
+					s1+=s[store[j]];
+					s2+=t[store[j]];
+				}
+				sort(s1.begin(),s1.end());sort(s2.begin(),s2.end());
+				if(s1!=s2){
+					check=false;
+					break;
+				}
+			}
+		}
+		if(!check){
+			cout<<"NO"<<endl;
+		}
+		else{
+			cout<<"YES"<<endl;
+		}
+	}
+}
