@@ -1,0 +1,109 @@
+Let’s brute force check all substrings of length <= 3 and print the lexicographically smallest one that doesn’t appear as a substring in the input. 
+We can guarantee that we will come across the answer due to the pigeonhole principle. There are at most n+n−1+n−2=3n−3
+ possible substrings of length 3 or shorter in the input. There exist 26+262+263=18278
+ total substrings of length 3 or shorter. It is impossible for the input to contain all 18278
+ substrings, as 3n−3<18278
+ for n≤1000
+.
+
+Final runtime looks something like O(18278n)
+ or O(n)
+ depending on how you implement substring checking.
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+#define mod 1000000007
+signed main(){
+	ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+	int tc,n;
+	cin>>tc;
+	while(tc--){
+		cin>>n;
+		string s;
+		cin>>s;
+		vector<char> alphabets={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+		set<string> possible_one;
+		string ans="";
+		for(int i=0;i<n;i++){
+			string temp="";
+			temp+=s[i];
+			possible_one.insert(temp);
+		}
+		for(int i=0;i<26;i++){
+			string temp="";
+			temp+=alphabets[i];
+			if(possible_one.find(temp)==possible_one.end()){
+				ans=temp;
+				break;
+			}
+		}
+		if(ans.size()!=0){
+			cout<<ans<<endl;
+			continue;
+		}
+		set<string> possible_two;
+		for(int i=0;i<n-1;i++){
+			string temp="";
+			temp+=s[i];
+			temp+=s[i+1];
+			possible_two.insert(temp);
+			// cout<<temp<<endl;
+		}
+		for(int i=0;i<26;i++){
+			string temp="";
+			temp+=alphabets[i];
+			for(int j=0;j<26;j++){
+				temp+=alphabets[j];
+				// cout<<temp<<endl;
+				if(possible_two.find(temp)==possible_two.end()){
+					ans=temp;
+					break;
+				}
+				temp.pop_back();
+			}
+			if(ans.size()!=0){
+				break;
+			}
+			temp.pop_back();
+		}
+		if(ans.size()!=0){
+			cout<<ans<<endl;
+			continue;
+		}
+		set<string> possible_three;
+		for(int i=0;i<n-2;i++){
+			string temp="";
+			temp+=s[i];
+			temp+=s[i+1];
+			temp+=s[i+2];
+			possible_three.insert(temp);
+		}
+		for(int i=0;i<26;i++){
+			string temp="";
+			temp+=alphabets[i];
+			for(int j=0;j<26;j++){
+				temp+=alphabets[j];
+				for(int k=0;k<26;k++){
+					temp+=alphabets[k];
+					if(possible_three.find(temp)==possible_three.end()){
+						ans=temp;
+						break;
+					}
+					temp.pop_back();
+				}
+				if(ans.size()!=0){
+					break;
+				}
+				temp.pop_back();
+			}
+			if(ans.size()!=0){
+				break;
+			}
+			temp.pop_back();
+		}
+		cout<<ans<<endl;
+	}
+}
