@@ -1,0 +1,28 @@
+class Solution {
+public:
+    bool solver(long long mid,vector<int>& time,int totalTrips){
+        int n=time.size();
+        long long possible_trips=0;
+        for(int i=0;i<n;i++){
+            possible_trips+=(mid/time[i]);
+        }
+        return possible_trips>=totalTrips;
+    }
+    long long minimumTime(vector<int>& time, int totalTrips) {
+        long long start=1;
+        long long end=1LL*(*max_element(time.begin(), time.end())) * totalTrips;
+        long long ans=0;
+        while(start<=end){
+            long long mid=start+(end-start)/2;
+            if(solver(mid,time,totalTrips)){
+                ans=mid;
+                // cout<<mid<<endl;
+                end=mid-1;
+            }
+            else{
+                start=mid+1;
+            }
+        }
+        return ans;
+    }
+};
