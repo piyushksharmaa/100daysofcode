@@ -1,0 +1,24 @@
+class Solution {
+public:
+    long long beautifulSubarrays(vector<int>& nums) {
+        int n=nums.size();
+        long long int count=0;
+        int val=0;
+        map<int,int> mp;
+        for(int i=0;i<n;i++){
+            val=val^nums[i];
+            if(mp.count(val)){
+                count+=(mp[val]);
+            }
+            if(val==0){
+                count++;
+            }
+            mp[val]++;
+        }
+        return count;
+    }
+};
+
+
+Approach - Observation is for any subarray if all the bits are in even count, then that is a beautiful subarray, Which also translates to the XOR of all elements of 
+           the subarray being zero.
