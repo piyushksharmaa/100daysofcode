@@ -1,0 +1,51 @@
+Approach :  
+
+Intuition :-
+Here we are using unordered_map to store index as the size of word and vector of string to store words of same sizes.
+To insert a word we just need to push the word at words[word.size()].push_back(word).
+For search operation we just need to search at words[word.size()].
+As we have a wild operator. which can be equal to any alphabet thus we need to create a function bool isEqual(string word1, string word2) so that it can ignore 
+the particular character while comparing with other characters Eg:- "a . c" == "a b c' or vice versa "a b c" == "a . c".
+
+But, this approach will give us TLE, so to escape TLE we have used reference when passing paramters.
+Not a good way of solving but nice approach, the complexity still looks wrong to me, O(N * word.size()) is the time complexity of a single search call, right? 
+So it is actually O(Q * N * word.size()), where Q is the number of search queries. It only works because of weak tests.
+
+class WordDictionary {
+public:
+    unordered_map<int,vector<string>> mp;
+    bool isEqual(string& word1,string& word2){
+        for(int i=0;i<int(word1.size());i++){
+            if(word2[i]=='.'){
+                continue;
+            }
+            else if(word1[i]!=word2[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+    WordDictionary() {
+        
+    }
+    
+    void addWord(string word) {
+        mp[word.size()].push_back(word);
+    }
+    
+    bool search(string word) {
+        for(auto &it: mp[word.size()]){
+            if(isEqual(it,word)){
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
