@@ -1,0 +1,21 @@
+class Solution {
+public:
+    long long zeroFilledSubarray(vector<int>& arr) {
+        long long count=0;
+        // 1 3 0 0 2 0 0 4
+        int n=arr.size();
+        for(int i=0;i<n;){
+            if(arr[i]!=0){i++;}
+            else{
+                long long int length=0;
+                // I have to consider this condition of i<n as in my code i am checking whether                         // arr[i]==0 but this case will give us runtime error when my last element is 0
+                while(i<n and arr[i]==0){
+                    length++;
+                    i++;
+                }
+                count+=((length)*(length+1)/2);
+            }
+        }
+        return count;
+    }
+};
