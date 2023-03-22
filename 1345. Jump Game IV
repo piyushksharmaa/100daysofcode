@@ -1,0 +1,160 @@
+The problem with the Java code above is because the code does a Depth First Search (DFS) instead of a Breadth First Search (BFS). Also, I believe the code does not use Dynamic Programming (DP), but instead uses DFS with memorization. Memorization and Dynamic Programming are concepts that can be frequently confused because they are similar, and in some cases they are the same thing.
+
+DFS without Memorization
+If DFS was used without memorization, this would find the correct answer, but would require trying ALL possible paths before knowing what the shortest path is. This method would give a Time Limit Exceeded Error (TLE) because it would take to long to evaluate ALL possible paths in a 50_000 length arr[]. To prevent paths with infinite loops, this would also require marking indexes that have already been visited on the current path while descending info the DFS, then clearing each visited flag while ascending back up from the DFS, which your code already does.
+
+DFS with memorization
+If DFS is used with memorization, which is what the above code does, memorization will make it run faster, but will sometimes give the wrong answer. This is because, for any index into arr[], it will memorize the shortest distance to the end, but memorized only for the first path to get to that index. For another later path that gets to that same index, there may be a shorter path from that index to the end, but that shorter path will never be found because the distance to the end has already been memorized, and memorized values are never modified or updated. This can be illustrated with the example arr[] of:
+[10, a, b, 20, 10, c, d, 20]
+The values a,b,c,d are arbitrary values that are not important to this example as long as they are NOT duplicates of 10 or 20. The wrong answer occurs because a wrong minimum path to the end is memorized for the 10 at index 4.
+
+The code will do DFS with recursively trying the +1 jumps first. This will result in the partial path of indexes:
+......+1.......+1.......+1........+1.......
+0(10) --> 1(a) --> 2(b) --> 3(20) --> 4(10)
+From the 10 at index 4, this will then find that the shortest path to the end is to do +1 jumps until the end, which is 3 jumps, which is the value that will be memorized for the 10 at index 4. From the 10 at index 4, doing a -1 jump back to the 20 at index 3 then doing an == jump to the end, is NOT a possible path at this time, because the partial path has already visited the 20 at index 3, so index 3 cannot be re-used when finding a path to the end.
+
+Later, when trying an == jump to same values from the 10 at index 0, to the 10 at index 4, with the partial path:
+......==.......
+0(10) --> 4(10)
+the code will then use the memorized value of 3 for the 10 at index 4, instead of testing possible paths to the end. Therefore using memorization blocks the code from finding the shorter path of a -1 jump back to the 20 at index 3, then a == jump to the end.
+
+In general when using DFS with memorization to find shortest paths, when there are multiple paths to get to or from a location, and the path to a location can possibly block a path from a location, then the DFS can result in wrong answers. In these cases, a BFS should be used to get the correct answer.
+
+This is NOT a problem to solve with DFS with memorization.
+
+Grid Example:
+An easier example to visualize the differences of when DSF with memorization can be used and where it should not be used, are the "robot walking a grid" type of problems that have been used in some of the leetcode monthly problems. Assume we have a rectangular grid with a robot in the top left corner, and we want to find the shortest path for the robot to walk to the bottom right corner, and some squares of the grid contain obstacles that the robot must walk around.
+
+If the robot can only walk right or down, then a DFS with memorization will work, because any path to a grid square cannot effect the path from that grid square to the end. The path can never loop back on itself because the robot can ONLY walk right or down.
+
+If the problem is changed so the robot can now walk up, down, right, or left, then the path can loop back on itself, and some paths to a grid square may possibly block some of the paths from that grid square to the end, This is when BFS should be used instead of DFS. BFS will find the shortest path to a grid square by building all possible paths at the same time, building them all one step at a time. Some of the BFS paths being built can pass through other BFS paths being built, without causing any errors. Whichever BFS path arrives at the desired grid square first is the shortest.
+
+Other graph algorithms may also be useful for these types of problems.
+
+
+__________________________________________________________________________________________________________________________________________________________________________________________
+
+Dynamic Programming is taking a problem, breaking it down to overlapping sub-problems, then the original problem can be solved by combining the repetitive sub-problems. The "overlapping" for the sub-problems, means that the result of one or more sub-problems calculations will be used as input to other sub-problems, and/or the output of a sub-problem will be used for the input of one or more sub-problems. All sub-problems are connected to at least one other problem through inputs and/or outputs. If there is no overlap (connectedness) of sub-problems, then it is NOT dynamic programming. Algorithms such as "divide and conquer" or "quick sort", do break the problem down into sub-problems, but the sub-problems do NOT overlap.
+
+Each overlapping sub-problem uses zero or more inputs from other instance calculations of the sub-problem with different inputs. This is where memorization is involved. The results of sub-problem calculations may need to be memorized so they can be used for other sub-problem calculations with different inputs. A simple example would be for calculating a Fibonacci number which is defined as F(n) = F(n-1) + F(n-2) where F(0)=1 and F(1)=1. This could be calculated as recursive function calls and no obvious memorization, but this would be inefficient as n becomes large. If calculating from the bottom up (lower values to higher values), and saving (memorizing) the results, then calculating F(n) does not require any recursive function calls, because the results from calculating F(n-1) and F(n-2) are already saved (memorized). This is a simple case, but it illustrates the "overlapping" of the sub-problems, where the simple sub-problem to calculate F(n) relies of other cases of the same sub-problem having previously been calculated and memorized.
+
+Some people say that memorization is not required for Dynamic Programming because Dynamic Programming solutions can usually be implemented as recursive function calls, without saving the values from sub-problem calculations. In this case, the values of the sub-problem calculations ARE being saved on the call-stack of the recursion. The values are being saved as part of the call-frame of a function, as that function recurses to other instances of that function. Values are also saved as return values from recursive functions. Recursive function calls for Dynamic Programming solutions are inefficient when the output of sub-problem calculations are used as inputs to 2 or more other sub-problem calculations and memorization is only on the call stack. This is because the memorized values on the call stack are only temporary, and the next time the same recursion is needed, then the function has to be called again to repeat the same calculation. Arrays, or some other more permanent data structure, can be used to hold memorized values while using Dynamic Programming by recursive function calls. Then the memorized value can be returned if a sub-problem is called with previously seen inputs. This is usually what is meant for "memorization" or "memoization" for cached results for function calls, where the function will always return the same output for the same inputs.
+
+Many people doing leetcode problems consider Dynamic Programming to use arrays (one or more dimensions) to hold the results of the sub-problem calculations. But the saved (memorized) values can also be saved in the call-stack during recursion, in one or more local variables, in list structures, or in other data structures. For example, a Dynamic Programming solution for calculating a Fibonacci value, where F(n) = F(n-1) + F(n-2), could save F(n-1) in the variable prev and F(n-2) in the variable prevPrev, or F(n-1) could be saved in array[n-1], or F() could be called recursively and the values temporarily saved in the call-frames on the call-stack.
+
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+class Solution {
+public:
+    int solver(int source,int destination,vector<int>& arr,vector<int>& visited){
+        // Base cases
+        if(source==destination){
+            return 0;
+        }
+        if(source<0 or source>destination){
+            return INT_MAX/2;
+        }
+        if(visited[source]==1){
+            return INT_MAX/2;
+        }
+        visited[source]=1;
+        int case1=1+solver(source+1,destination,arr,visited);
+        int case2=1+solver(source-1,destination,arr,visited);
+        int case3=INT_MAX/2;
+        for(int i=0;i<=destination;i++){
+            if(i!=source and arr[source]==arr[i]){
+                case3=1+solver(i,destination,arr,visited);
+            }
+        }
+        visited[source]=0;
+        return min(case1,min(case2,case3));
+    }
+    int minJumps(vector<int>& arr) {
+        // we are initially positioned at the first index of the array.
+        // 100 -23 -23 404 100 23 23 23 3 404
+        // 3 case : 
+        // we can jump to i -> i+1
+        // we can jump to i -> i-1
+        // we can jump to j where arr[i]==arr[j] and i!=j
+        // We have to return minimum number of steps to reach the last index of the array.
+        // One thing to notice here is answer is always possible as we can jump to the next node anytime.
+        // So, we can take steps as n-1 where n is the size
+        // and now we will try to reduce no of steps as much as possible
+        int n=arr.size();
+        vector<int> visited(n,0);
+        return solver(0,n-1,arr,visited);
+    }
+};
+
+
+// Brute-force : So here we try all nodes that are possible to be jumped. Also, we are using visited array but we are unmarking the node as unvisited after it has been traverse in a path. This is done so that if we we dont unmark it, and we traverse a longer path before, then on traversing a relatively shorter path having any common node , will break the dfs traversal. This is called backtracking. Where we are undoing what was done.
+This solves our one problem of not marking any node which as visited if it could be used in any other path too. When a node is common in multiple paths, we mark and then unmark it visited.
+
+
+// Using DP : Next, this solution give us correct answer, but computes path which are common in various paths. There re-computation is involved. To solve this, we can think of memoization (dp), to store the computed paths.
+Although, this seems at first like it would work, but think of the where we traversed a path via node x. Lets, dp[x] will store the min path from x to last index. Then when we are done with this path, we backtrack and release node x. Then, we might have some path via node x, which follows another path form node x to last index and is actually shorter, but because we have already stored some value in dp[x], we get wrong value.
+
+____________________________________________________________________________________________________________________________________________________________________________________
+
+int n=arr.size();
+        unordered_map<int,vector<int>> mp;
+        for(int i=0;i<n;i++){
+            mp[arr[i]].push_back(i);
+        }
+        queue<int> q;
+        q.push(0);
+        vector<int> visited(n,0);
+        visited[0]=1;
+        int steps=0;
+        while(!q.empty()){
+            int size=q.size();
+            while(size--){
+                int curr=q.front();
+                q.pop();
+                if(curr==n-1){
+                    return steps;
+                }
+                if(curr+1<n and visited[curr+1]==0){
+                    q.push(curr+1);
+                    visited[curr+1]=1;
+                }
+                if(curr-1>=0 and visited[curr-1]==0){
+                    q.push(curr-1);
+                    visited[curr-1]=1;
+                }
+                vector<int> temp=mp[arr[curr]];
+                for(int i=0;i<temp.size();i++){
+                    if(visited[temp[i]]==0){
+                        q.push(temp[i]);
+                        visited[temp[i]]=1;
+                    }
+                }
+                mp[arr[curr]].clear();
+            }
+            steps++;
+        }
+        return -1;
+
+
+
+Why to clear the map when you already marked "visited = true"?????
+#"Visited = true", will work completely fine to prevent visiting any index that is
+(already explored) or (waiting in the queue to be explored)
+#So whenever we iterate the "map" of similar valued indexes we can check whether the
+index is visited. If visited it will not consider that path.
+
+//========================================================================
+#But there is one problem of time constraint with the traditional approach
+#There could be a large number of indexes with same value
+#So after the first index for a value is encountered we add all the occurances of that value in the queue
+and mark those indexes as visited
+#When we encounter that similar valued index (after popping from queue) then we
+again iterate over all those redundant indexes and
+every time the condition "visited = true" becomes true and we just iterate those
+large number of indexes for no reason
+#So we can prevent this redundant iteration just by "CLEARING THE MAP FOR ALREADY VISITED VALUES"
+
+So
+OPTION-1 => Iterate all already visited indexes, visited becomes true, exit the loop, no harm done
+OPTION-2 => Clear the map -> Don't even iterate the already visited indexes, no harm done :) <== USE THIS ONE
