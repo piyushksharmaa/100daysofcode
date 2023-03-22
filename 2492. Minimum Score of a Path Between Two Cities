@@ -1,0 +1,33 @@
+class Solution {
+public:
+    void solver(int source,vector<pair<int,int>> adj[],vector<int>& vis,int& min_dis){
+        vis[source]=1;
+        for(auto it: adj[source]){
+            min_dis=min(min_dis,it.second);
+            if(vis[it.first]==0){
+                // Suppose if there is a loop 
+                // Example - 1->2->3
+                //           |_____|
+                // Then, if we are traversing from 1->2->3 then we can't go to 3->1 as 1 is already                     //  visited, we have to put min_dis condition before checking visited condition   
+                solver(it.first,adj,vis,min_dis);
+            }
+        }
+    }
+    int minScore(int n, vector<vector<int>>& roads) {
+        // So we only have to run a dfs from 1 and n must be present in 1's component as this is a must condition written in 
+        // question
+        vector<pair<int,int>> adj[n+1];
+        int m=roads.size();
+        for(int i=0;i<m;i++){
+            int a=roads[i][0];
+            int b=roads[i][1];
+            int dis=roads[i][2];
+            adj[a].push_back({b,dis});
+            adj[b].push_back({a,dis});
+        }
+        vector<int> vis(n+1,0);
+        int min_dis=INT_MAX;
+        solver(1,adj,vis,min_dis);
+        return min_dis;
+    }
+};
