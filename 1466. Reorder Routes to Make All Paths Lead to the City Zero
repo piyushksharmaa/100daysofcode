@@ -58,5 +58,46 @@ We need O(n) time to initialize the adjacency list. The dfs function visits each
 each edge can only be iterated twice (by nodes at the end), resulting in O(e) operations total while visiting all nodes, where e is the number of edges. 
 Because the given graph is a tree, there are n−1 undirected edges, so O(n+e)=O(n).
 
+Space complexity: O(n)
+Building the adjacency list takes O(n) space.
+The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. It would take up O(n) space in that case.
 
-Approach :
+
+Approach : Using BFS
+
+
+class Solution {
+public:
+    int count=0;
+    void solver(int node,int n,vector<pair<int,int>> adj[]){
+        queue<int> q;
+        vector<bool> visit(n,0);
+        q.push(node);
+        visit[node]=true;
+        while(!q.empty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                node=q.front();
+                q.pop();
+                for(int j=0;j<adj[node].size();j++){
+                    pair<int,int> temp=adj[node][j];
+                    if(!visit[temp.first]){
+                        count+=(temp.second);
+                        visit[temp.first]=true;
+                        q.push(temp.first);
+                    }
+                }
+            }
+        }
+    }
+    int minReorder(int n, vector<vector<int>>& connections) {
+        int edges=connections.size();
+        vector<pair<int,int>> adj[n]; 
+        for(int i=0;i<edges;i++){
+            adj[connections[i][0]].push_back({connections[i][1],1});
+            adj[connections[i][1]].push_back({connections[i][0],0});
+        }
+        solver(0,n,adj);
+        return count;
+    }
+};
