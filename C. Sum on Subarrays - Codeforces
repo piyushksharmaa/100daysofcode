@@ -1,0 +1,59 @@
+Approach : 
+There are many ways to solve this problem. I will describe the following recursive solution:
+
+if k<n, let's compose an array where every segment ending with the k-th element is positive, and every other segment is negative. 
+This array can be [−1,−1,−1,…,200,−400,−1,−1,−1], where 200 is the k-th element of the array (note that when k=0, 200
+doesn't belong to the array, so it consists of only negative numbers). but if k≥n, solve the same problem with n−1 and k−n
+recursively, get an array of length n−1 with k−n positive subarrays, and append 1000 to it to make all n
+segments ending with the last element positive.
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+#define mod 1000000007
+
+signed main(){
+	ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+	int t,n,k;
+	cin>>t;
+	while(t--){
+		cin>>n>>k;
+		if(k==0){
+			for(int i=0;i<n;i++){
+				cout<<-1<<" ";
+			}
+			cout<<endl;
+		}
+		else if(k<=n){
+			for(int i=0;i<k-1;i++){
+				cout<<-1<<" ";
+			}
+			cout<<k<<" ";
+			for(int i=k;i<n;i++){
+				cout<<-1*(k+1)<<" ";
+			}
+			cout<<endl;
+		}
+		else if(k>n){
+			int count=0;
+			while(k>n){
+				k=k-n;
+				n--;
+				count++;
+			}
+			for(int i=0;i<k-1;i++){
+				cout<<-1<<" ";
+			}
+			cout<<k<<" ";
+			for(int i=k;i<n;i++){
+				cout<<-1*(k+1)<<" ";
+			}
+			for(int i=0;i<count;i++){
+				cout<<1000<<" ";
+			}
+			cout<<endl;
+		}
+	}
+}
