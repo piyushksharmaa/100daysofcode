@@ -1,0 +1,81 @@
+class Solution {
+public:
+    long long makeSubKSumEqual(vector<int>& arr, int k) {
+        int n=arr.size();
+        vector<int> visited(n,0);
+        long long operations=0;
+        for(int i=0;i<n;i++){
+            if(visited[i]==0){
+                vector<int> same_values;
+                visited[i]=1;
+                same_values.push_back(arr[i]);
+                int start=(i+k)%n;
+                while(start!=i){
+                    same_values.push_back(arr[start]);
+                    visited[start]=1;
+                    start=(start+k)%n;
+                }
+                sort(same_values.begin(),same_values.end());
+                int median=same_values[same_values.size()/2];
+                for(int j=0;j<same_values.size();j++){
+                    operations+=(abs(same_values[j]-median));
+                }
+            }
+        }
+        return operations;
+    }
+};
+
+
+// Time complexity according to me is O(n+nlogn)  ki agr saari values ek hi set me aajaaye toh
+
+// First observation is that if we want each subarray sum to be the same, it means that the array must have a repeated pattern of size k.
+// To understand that, let's just say that k is 4 and the array starts with [1 2 3 4...]
+// Then to have sum(1,2,3,4) == sum(2,3,4, x) the next element has to be a 1! Then the next one a 2, etc.
+
+// So this means that in the final array, arr[i] == arr[(i + k) %n] for every i.
+
+// Since arr[i] == arr[(i + k) %n] == arr[(i + 2*k) %n] == arr[(i + 3*k) %n] == .... this gives us a set of indexes for which the values must be the same. First step is to find these sets of indexes.
+
+// Then for each set must find the minimal number of operations to have all these values the same. This means finding v so that sum_x(|x -v|) is minimal. This is the median of these values.
+
+// Once we found the median, we just have to add the difference between each value and the median to the result.
+
+// class Solution {
+//     public long makeSubKSumEqual(int[] arr, int k) {
+//         int n = arr.length;
+
+//         boolean[] visited = new boolean[n];
+
+//         long total = 0;
+//         for (int i = 0; i < n; i++) {
+//             if (visited[i]) continue; // we already considered this set
+//             List<Integer> sameValue = new ArrayList<>();
+//             sameValue.add(arr[i]);
+//             int next = (i + k) % n;
+            
+//             while (next != i) { // we stop when we come back to the first index
+//                 visited[next] = true;
+//                 sameValue.add(arr[next]);
+//                 next = (next + k) % n;
+//             }
+
+//             // find median
+//             Collections.sort(sameValue); // could be found in O(n) with quickselect but there is no quickselect in the JDK
+//             int median = sameValue.get(sameValue.size() / 2);
+
+//             // add differences 
+//             for (Integer integer : sameValue) {
+//                 total += Math.abs(integer - median);
+//             }
+
+//         }
+//         return total;
+//     }
+// }
+// Complexity
+// To understand the worst case, imagine all indexes are in one set (which happens when gcd(n,k) = 1)
+
+// This solution is O(n log n) because of the sort but by using quickselect to find the median, we could reduce it to O(n)
+
+// Space complexity: O(n) because we must store the indexes in a list.
