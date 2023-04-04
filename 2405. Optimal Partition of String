@@ -1,0 +1,38 @@
+class Solution {
+public:
+    /*
+    
+    s-> partition the string into 1 or more substrings such that characters in each substring are unique.
+    return min number of substrings in such a partition.
+    
+    S-> abacaba
+    ab ac ab a
+    
+    s-> aabdcd
+    
+    a abdc d
+    
+    s->    *******
+    
+    Maintain a set which will tell us whether a character has appeared or not till now.
+    
+              
+    */
+    
+    int partitionString(string s) {
+        int n=s.size();
+        int i=0;
+        int partition=0;
+        while(i<n){
+            set<char> freq;
+            // I can optimize this as we can also make a freq array of 26 size and mark them accordingly if a character appears.
+            while(i<n and !freq.count(s[i])){
+                freq.insert(s[i]);
+                i++;
+            }
+            partition++;
+        }
+        return partition;
+    }
+    
+};
