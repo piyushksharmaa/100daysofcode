@@ -1,7 +1,10 @@
 Approach - 
 My approach was totally worong here 
 This question was based on simple approach that is to iterate over the string and get the first character which is less than your number and then insert number there only.
+I was thinking that let's say that if we decide to put our number let's say on i'th place and i'th place number is less than d but (i+1)th number is greater than d
 
+So i was in a dilemma that if we put our number there then it will be smaller as expected because we are shifting the position of larger number
+But let's take an example of 509 and we have to put 4, so 5409 would be greater than 5049
 
 #include<bits/stdc++.h>
 using namespace std;
