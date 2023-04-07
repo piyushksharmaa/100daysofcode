@@ -1,0 +1,45 @@
+class Solution {
+public:
+    // We have been a given a mxn binary matrix grid
+    // 0-sea
+    // 1-land
+    // We can move in 4 directions
+    // We have to return the number of land cells in grid for which we cannot walk off the boundary of 
+    // the grid in any number of moves.
+    // So what we can do is we can traverse on the boundary of the grid and if we encounter any 1 there
+    // then what we will do is we will call dfs for that 1 and mark all its adjacent neighbours and that 
+    // node as 1 as it will not going to contribute to my answer.
+    
+    void solver(int i,int j,vector<vector<int>>& grid,vector<vector<int>>& visited){
+        if(i<0 or j<0 or i>=grid.size() or j>=grid[0].size() or visited[i][j]==1 or grid[i][j]==0){
+            return ;
+        }
+        visited[i][j]=1;
+        solver(i+1,j,grid,visited);
+        solver(i-1,j,grid,visited);
+        solver(i,j+1,grid,visited);
+        solver(i,j-1,grid,visited);
+    }
+    int numEnclaves(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        vector<vector<int>> visited(m,vector<int>(n,0));   // This will store all the grids that we have 
+                                                           // visited till now.
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if((i==0 or j==0 or i==m-1 or j==n-1) and visited[i][j]==0 and grid[i][j]==1){
+                    solver(i,j,grid,visited);
+                }
+            }
+        }
+        int count=0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(visited[i][j]==0 and grid[i][j]==1){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+};
