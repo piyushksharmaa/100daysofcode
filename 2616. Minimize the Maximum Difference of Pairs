@@ -43,6 +43,7 @@ public:
 
 
 
+// Brute force approach can be that rather than using binary search we will use a simple for loop from 0 to max_diff possible that is max_ele-min_ele
 
 
 
