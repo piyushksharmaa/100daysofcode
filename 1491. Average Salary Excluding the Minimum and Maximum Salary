@@ -1,0 +1,26 @@
+class Solution {
+public:
+    double average(vector<int>& salary) {
+        /*
+        
+        We have been given an array of unique integers 
+        salary[i] - salary of ith employee
+        
+        Return the average salary of employees excluding the minimum and maximum salary 
+        
+        */
+        long long int sum=0;
+        int max_salary=INT_MIN;
+        int min_salary=INT_MAX;
+        int n=salary.size();
+        for(int i=0;i<n;i++){
+            sum+=salary[i];
+            max_salary=max(max_salary,salary[i]);
+            min_salary=min(min_salary,salary[i]);
+        }
+        // cout<<sum<<" "<<n<<" "<<max_salary<<" "<<min_salary<<endl;
+        sum-=(max_salary+min_salary);
+        // cout<<sum<<endl;
+        return double(sum)/double(n-2);
+    }
+};
