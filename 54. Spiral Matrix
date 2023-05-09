@@ -1,0 +1,81 @@
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> ans;
+        int m=matrix.size();
+        int n=matrix[0].size();
+        bool check=true;
+        int move=0;
+        int i=0;
+        int j=0;
+        while(check){
+            check=false;
+            if(i<0 or j<0 or i>=m or j>=n){
+                break;
+            }
+            if(move==0){           // Right move
+                if(matrix[i][j]==INT_MIN){
+                    continue;
+                }
+                ans.push_back(matrix[i][j]);
+                // cout<<matrix[i][j]<<endl;
+                matrix[i][j]=INT_MIN;
+                j++;
+                check=true;
+                if(j==n or (j<n and matrix[i][j]==INT_MIN)){
+                    j--;
+                    i++;
+                    move=1;
+                    continue;
+                }
+            }
+            if(move==1){           // Down move
+                // cout<<"ads"<<endl;
+                if(matrix[i][j]==INT_MIN){
+                    continue;
+                }
+                ans.push_back(matrix[i][j]);
+                matrix[i][j]=INT_MIN;
+                i++;
+                check=true;
+                if(i==m or (i<m and matrix[i][j]==INT_MIN)){
+                    i--;
+                    j--;
+                    move=2;
+                    continue;
+                }
+            }
+            if(move==2){           // Left move
+                if(matrix[i][j]==INT_MIN){
+                    continue;
+                }
+                ans.push_back(matrix[i][j]);
+                matrix[i][j]=INT_MIN;
+                j--;
+                check=true;
+                if(j==-1 or (j>=0 and matrix[i][j]==INT_MIN)){
+                    j++;
+                    i--;
+                    move=3;
+                    continue;
+                }
+            }
+            if(move==3){           // Up move
+                if(matrix[i][j]==INT_MIN){
+                    continue;
+                }
+                ans.push_back(matrix[i][j]);
+                matrix[i][j]=INT_MIN;
+                i--;
+                check=true;
+                if(i==-1 or (i>=0 and matrix[i][j]==INT_MIN)){
+                    i++;
+                    j++;
+                    move=0;
+                    continue;
+                }
+            }
+        }
+        return ans;
+    }
+};
