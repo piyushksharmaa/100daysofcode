@@ -1,0 +1,48 @@
+Algorithm:
+
+Store every pair (nums1[i], nums2[i]) in array pairs, and sort pairs by the second element (nums2[i]) in decreasing order.
+
+Use a min-heap top_k_heap to store the first k nums1[i] and a variable top_k_sum to store their sum.
+
+Initialize answer as the sum of elements in top_k_heap (i.e. top_k_sum) times pairs[k - 1][1].
+
+Iterate over indices starting from k, at each index i:
+
+Remove the smallest element stored in top_k_heap and from top_k_sum.
+Add the current nums1[i] to the heap and top_k_sum.
+Get the current score as the sum of top_k_heap (i.e. top_k_sum) times nums2[i], and update answer as the maximum score we have met.
+Return answer.
+
+
+
+
+class Solution {
+public:
+    long long maxScore(vector<int>& nums1, vector<int>& nums2, int k) {
+        vector<pair<int,int>> vec;
+        int n=nums1.size();
+        for(int i=0;i<n;i++){
+            vec.push_back({nums2[i],nums1[i]});
+        }
+        sort(vec.rbegin(), vec.rend());
+ 
+        priority_queue<int,vector<int>,greater<int>> pq;
+        long long int sum=0;
+        for(int i=0;i<k;i++){
+            pq.push(vec[i].second);
+            sum+=(vec[i].second);
+        }
+        long long int ans=sum*vec[k-1].first;
+        for(int i=k;i<n;i++){
+            int top_ele=pq.top();
+            if(top_ele<vec[i].second){
+                sum-=top_ele;
+                sum+=vec[i].second;
+                pq.pop();
+                pq.push(vec[i].second);
+                ans=max(ans,sum*vec[i].first);
+            }
+        }
+        return ans;
+    }
+};
