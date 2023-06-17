@@ -1,0 +1,57 @@
+/*
+
+Approch: 
+
+So, we can know that for a fixed root, the left subtree elements and the right subtree elements are also fixed.
+
+We can find the left subtree elements which are all the elements that is smaller than root value, and right subtree elements which are greater than root value.
+
+And in order to make it identical with original BST, we should keep the relative order in left subtree elements and in right subtree elements.
+
+Assume the lenght of left subtree elements is left_len and right is right_len, they can change their absolute position but need to keep their relative position in either left subtree or right right subtree.
+
+So as the subtree, so we use recursion.
+
+Here, we have pascal triangle so as to calculate nCr efficiently.
+And, now in the solver function we are checking that if n<3 then return 1. as for n=1 there will only be 1 BST possible and same for n=2.
+Then making left and right vector and passing them to recursive function and calculating ans for current one 
+Answer would be n-1Cr where r is the size of left or right vector.
+It would be calculated like first as we know root element is fixed then for left and right vector we can place them in n-1 places so left selecting r places from them would be n-1Cr.
+
+*/
+int mod=1e9+7;
+class Solution {
+public:
+    vector<vector<long long int>> pascal_table;
+    int solver(vector<int>& nums){
+        int n=nums.size();
+        if(n<3){
+            return 1;
+        }
+        vector<int> left,right;
+        for(int i=1;i<n;i++){
+            if(nums[i]>nums[0]){
+                right.push_back(nums[i]);
+            }
+            else{
+                left.push_back(nums[i]);
+            }
+        }
+        long long int ans_left=solver(left)%mod;
+        long long int ans_right=solver(right)%mod;
+        // (n-1)C(left.size())
+        long long int ans_curr=pascal_table[n-1][left.size()];
+        return ((((ans_left*ans_right)%mod)*ans_curr))%mod;
+    }
+    int numOfWays(vector<int>& nums) {
+        int n=nums.size();
+        pascal_table.resize(n+1);
+        for(int i=0;i<=n;i++){
+            pascal_table[i]=vector<long long int>(i+1,1);
+            for(int j=1;j<i;j++){
+                pascal_table[i][j]=(pascal_table[i-1][j]+pascal_table[i-1][j-1])%mod;
+            }
+        }
+        return solver(nums)-1;
+    }
+};
