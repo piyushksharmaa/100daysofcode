@@ -1,0 +1,48 @@
+class Solution {
+public:
+    bool check(long long int mid,int index,int n,int maxSum){
+        long long int sum=mid;
+        int x=index;
+        int z=n-index-1;
+        if(x>=(mid-1)){
+            sum+=(((mid-1)*(mid))/2+(x-(mid-1)));
+        }
+        else{
+            sum+=(((mid-1)*(mid))/2-((mid-1-x)*(mid-x))/2);
+        }
+        if(z>=(mid-1)){
+            sum+=(((mid-1)*(mid))/2+(z-(mid-1)));
+        }
+        else{
+            sum+=(((mid-1)*(mid))/2-((mid-1-z)*(mid-z))/2);
+        }
+        return sum<=maxSum;
+    }
+    int maxValue(int n, int index, int maxSum) {
+        // This can be solved with the help of binary search 
+        /*
+        
+        How??
+        
+        What i am thinking here is to maximize the value of nums[index] so for that we need to check for 
+        different values between 1 to maxSum that which of this value will match all the conditions and 
+        answer will be maximum.
+        
+        */
+        
+        long long int start=1;
+        long long int end=maxSum;
+        long long int ans=1;
+        while(start<=end){
+            long long int mid=(start+(end-start)/2);
+            if(check(mid,index,n,maxSum)){
+                ans=max(ans,mid);
+                start=mid+1;
+            }
+            else{
+                end=mid-1;
+            }
+        }
+        return ans;
+    }
+};
