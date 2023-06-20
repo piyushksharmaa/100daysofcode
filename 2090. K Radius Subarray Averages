@@ -1,0 +1,49 @@
+class Solution {
+public:
+    vector<int> getAverages(vector<int>& nums, int k) {
+        int n=nums.size();
+        /*
+        
+        This can be done with the help of prefix sum. Right?
+        
+        Let's see the first example
+        
+        7 4 3 9 1 8 5 2 6
+        
+        7 11 14 23 24 32 37 39 45
+        
+        0 1 2 3 4 5 6 7 8
+        
+        k=3
+        
+        i=0 - (0-3)<0 No
+        i=1 - (1-3)<0 No
+        i=2 - (2-3)<0 No
+        i=3 - (3-3)=0 (3+3)<arr.size() Yes
+        */ 
+        
+        vector<long long int> prefix;
+        long long int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=nums[i];
+            prefix.push_back(sum);
+        }
+        vector<int> ans;
+        for(int i=0;i<n;i++){
+            if(i-k>=0 and i+k<n){
+                // ans.push_back(prefix[i+k]/(2*k+1));
+                // So this will be wrong if i do it like this i have subtract that sum also which is not the part of this.
+                if(i-k-1>=0){
+                    ans.push_back((prefix[i+k]-prefix[i-k-1])/(2*k+1));
+                }
+                else{
+                    ans.push_back(prefix[i+k]/(2*k+1));
+                }
+            }
+            else{
+                ans.push_back(-1);
+            }
+        }
+        return ans;
+    }
+};
