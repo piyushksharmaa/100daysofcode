@@ -1,0 +1,52 @@
+/*
+
+Approach:
+
+So, Here we have used concept of DP as we want to explore all the paths for the ans to get the best optimal 
+answer.
+What we can do here is that 
+For each rod we will have 3 options either to get add in L1(Rod1), add in L2(Rod2), or we don't pick them up.
+So, this will be an easy recursion and we can memoize this further but it will MLE.
+
+So, to deal with this we can introduce the concept of difference here
+i.e, L1-L2==diff
+
+In the end, if we get diff==0 we get one answer from there.
+Now, if we add in L1 we will + the length we have added and in L2 - the length we have added.
+
+But there will be one problem that how will we find the length then, 
+For that, we will add them while maintaining our options only so as to get the final length in the end.
+But there is one more problem that discussed in video that we will get double the rod length as we have added l1 and l2 together. Why? Because assume that we have gotten diff==0 at index==rods.size() then that 
+0 will get add to solver(..,...,..) and then this will return to previous call and further on.
+
+To memoize this further diff will be in the limit -5000 to 5000 (diff=l1-l2)
+
+
+*/
+
+class Solution {
+public:
+    int dp[21][10001];
+    int solver(int index,int diff,vector<int>& rods){
+        if(index==rods.size()){
+            if(diff==0){
+                return 0;
+            }
+            else{
+                return INT_MIN;    
+            }
+        }
+        if(dp[index][diff+5000]!=-1){
+            return dp[index][diff+5000];
+        }
+        int op1=rods[index]+solver(index+1,diff+rods[index],rods);
+        int op2=rods[index]+solver(index+1,diff-rods[index],rods);
+        int op3=solver(index+1,diff,rods);
+        return dp[index][diff+5000]=max(op1,max(op2,op3));
+    }
+    int tallestBillboard(vector<int>& rods) {
+        // vector<vector<vector<int>>> dp(5001,vector<vector<int>>(5001,vector<int>(21,-1)));   MLE
+        memset(dp,-1,sizeof(dp));
+        return solver(0,0,rods)/2;
+    }
+};
