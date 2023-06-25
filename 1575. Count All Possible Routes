@@ -1,0 +1,37 @@
+/*
+
+Approach:
+
+This was a normal question just a bit of variation in which i did mistake that if once i got start==finish 
+i was returning 1, but no fuel is still left so we can go more distance and make another path.
+So, yeah i was not considering that case.
+
+*/
+
+class Solution {
+public:
+    int dp[101][201];
+    int mod=1e9+7;
+    int solver(vector<int>& locations,int start,int finish,int fuel){
+        if(fuel<0){
+            return 0;
+        }
+        if(dp[start][fuel]!=-1){
+            return dp[start][fuel];
+        }
+        int routes=0;
+        if(start==finish){
+            routes+=1;
+        }
+        for(int i=0;i<int(locations.size());i++){
+            if(i!=start){
+                routes=(routes+solver(locations,i,finish,fuel-abs(locations[i]-locations[start])))%mod;
+            }
+        }
+        return dp[start][fuel]=routes;
+    }
+    int countRoutes(vector<int>& locations, int start, int finish, int fuel) {
+        memset(dp,-1,sizeof(dp));
+        return solver(locations,start,finish,fuel);
+    }
+};
