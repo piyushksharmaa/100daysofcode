@@ -1,0 +1,60 @@
+/*
+    
+Approach:
+
+So, one approach coming on my mind is to this question kind of resembles to bfs.
+Kind of we are going level by level.
+So, we can use bfs here
+
+*/
+class Solution {
+private:
+    bool valid(int curr_x,int curr_y,int curr_r,int next_x,int next_y){
+        long long int solve_x=(1ll*next_x-1ll*curr_x)*(1ll*next_x-1ll*curr_x);
+        long long int solve_y=(1ll*next_y-1ll*curr_y)*(1ll*next_y-1ll*curr_y);
+        // cout<<solve_x<<" "<<solve_y<<endl;
+        // cout<<curr_r*curr_r<<endl;
+        if((solve_x+solve_y)<=1ll*(1ll*curr_r*1ll*curr_r)){
+            return true;
+        }
+        return false;
+    }
+public:
+    int maximumDetonation(vector<vector<int>>& bombs) {
+        int n=bombs.size();
+        int max_bombs=0;
+        // cout<<bombs[0][0]<<endl;
+        for(int i=0;i<n;i++){
+            int curr_x=bombs[i][0];
+            int curr_y=bombs[i][1];
+            int curr_r=bombs[i][2];
+            int count_bombs=1;
+            // To avoid any kind of duplicacy we have to store the visited ones in some data structures.
+            set<int> visited;
+            queue<pair<pair<int,int>,int>> store;
+            store.push({{curr_x,curr_y},curr_r});
+            visited.insert(i);
+            while(!store.empty()){
+                pair<pair<int,int>,int> temp=store.front();
+                store.pop();
+                int x=temp.first.first;
+                int y=temp.first.second;
+                int r=temp.second;
+                for(int j=0;j<n;j++){
+                    // cout<<bombs[0][0]<<endl;
+                    // cout<<bombs[j][0]<<endl;
+                    pair<pair<int,int>,int> next=make_pair(make_pair(bombs[j][0],bombs[j][1]),bombs[j][2]);
+                    bool isok=valid(x,y,r,bombs[j][0],bombs[j][1]);
+                    if(visited.find(j)==visited.end() and isok){
+                        store.push(next);
+                        visited.insert(j);
+                        count_bombs++;
+                        // cout<<count_bombs<<endl;
+                    }
+                }
+            }
+            max_bombs=max(max_bombs,count_bombs);
+        }
+        return max_bombs;
+    }
+};
