@@ -1,0 +1,65 @@
+class Solution {
+public:
+    vector<int> dir_x={0,-1,1,0};
+    vector<int> dir_y={1,0,0,-1};
+    bool dfs(vector<vector<int>>& store,int i,int j,int m,int n){
+        if(i==m-1){
+            // cout<<"saasd"<<endl;
+            return true;
+        }
+        bool ans=false;
+        store[i][j]=1;
+        for(int x=0;x<4;x++){
+            int new_x=i+dir_x[x];
+            int new_y=j+dir_y[x];
+            // cout<<new_x<<" "<<new_y<<endl; 
+            if(new_x>=0 and new_y>=0 and new_x<m and new_y<n and store[new_x][new_y]==0){
+                // cout<<"Yes"<<endl;
+                ans=ans|dfs(store,new_x,new_y,m,n);
+            }
+        }
+        return ans;
+    }
+    bool solver(int mid,int row,int col,vector<vector<int>>& cells){
+        vector<vector<int>> store(row,vector<int>(col,0));
+        for(int i=0;i<=mid;i++){
+            store[cells[i][0]-1][cells[i][1]-1]=1;
+        }
+        // for(int i=0;i<row;i++){
+        //     for(int j=0;j<col;j++){
+        //         cout<<store[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        // cout<<endl;
+        for(int j=0;j<col;j++){
+            if(store[0][j]==0){
+                // cout<<j<<endl;
+                
+                if(dfs(store,0,j,row,col)){
+                    return true;
+                }
+            }
+        }
+        // cout<<endl;
+        return false;
+    }
+    int latestDayToCross(int row, int col, vector<vector<int>>& cells) {
+        int n=cells.size();
+        int low=0;
+        int high=n-1;
+        int last_day=0;
+        while(low<=high){
+            int mid=low+(high-low)/2;
+            if(solver(mid,row,col,cells)){
+                // cout<<"asdsa"<<endl;
+                last_day=max(last_day,mid+1);
+                low=mid+1;
+            }
+            else{
+                high=mid-1;
+            }
+        }
+        return last_day;
+    }
+};
